@@ -63,17 +63,29 @@ public class BarcodeScannerView extends FrameLayout implements Camera.PreviewCal
             Camera.Size size = parameters.getPreviewSize();
             int width = size.width;
             int height = size.height;
+            int boxSize=(width<height?width:height)/7*3;
+            int xStart=(width-boxSize)/2;
+            int xEnd=(width+boxSize)/2;
+            int yStart=(height-boxSize)/2;
+            int yEnd=(height+boxSize)/2;
 
             if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
                 byte[] rotatedData = new byte[data.length];
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++)
+                for (int y = yStart; y < yEnd; y++) {
+                    for (int x = yStart; x < yEnd; x++)
                         rotatedData[x * height + height - y - 1] = data[x + y * width];
                 }
 
                 int tmp = width;
                 width = height;
                 height = tmp;
+                data = rotatedData;
+            } else {
+                byte[] rotatedData = new byte[data.length];
+                for (int y = yStart; y < yEnd; y++) {
+                    for (int x = xStart; x < xEnd; x++)
+                        rotatedData[x + y * width] = data[x + y * width];
+                }
                 data = rotatedData;
             }
 
@@ -101,7 +113,6 @@ public class BarcodeScannerView extends FrameLayout implements Camera.PreviewCal
                 Log.i(TAG, finalRawResult.getText());
                 WritableMap event = Arguments.createMap();
                 event.putString("data", finalRawResult.getText());
-                event.putString("type", finalRawResult.getBarcodeFormat().toString());
                 ReactContext reactContext = (ReactContext)getContext();
                 reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
                         getId(),
