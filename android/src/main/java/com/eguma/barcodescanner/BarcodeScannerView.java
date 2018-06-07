@@ -72,7 +72,7 @@ public class BarcodeScannerView extends FrameLayout implements Camera.PreviewCal
             if (DisplayUtils.getScreenOrientation(getContext()) == Configuration.ORIENTATION_PORTRAIT) {
                 byte[] rotatedData = new byte[data.length];
                 for (int y = yStart; y < yEnd; y++) {
-                    for (int x = yStart; x < yEnd; x++)
+                    for (int x = xStart; x < xEnd; x++)
                         rotatedData[x * height + height - y - 1] = data[x + y * width];
                 }
 
