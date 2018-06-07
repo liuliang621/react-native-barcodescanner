@@ -4,12 +4,31 @@ import android.hardware.Camera;
 import java.util.List;
 
 public class CameraManager {
+    // ll add ------------------------------
+	private static CameraManager mCameraManager;
+	// ll add ------------------------------
+	
     private int mCameraId = -1;
     private Camera mCamera;
 
+	/* ll remove----------------------------
     public CameraManager() {
         mCamera = getCameraInstance();
     }
+	ll remove -----------------------------*/
+	
+	//------------------------------
+	private CameraManager() {
+		
+	}
+	
+	public static CameraManager getInstance() {
+		if (mCameraManager == null) {
+			mCameraManager = new CameraManager();
+		}
+		return mCameraManager;
+	}
+	//------------------------------
 
     public Camera getCamera() {
         if (mCamera == null) {
